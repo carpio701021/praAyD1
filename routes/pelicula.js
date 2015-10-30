@@ -17,14 +17,35 @@ var pelicula = require('../models/pelicula');
 
 /* GET home page. */
 router.get('/', function(req, res, next) {
+	pelicula.find(function( err, peliculas, count ){
+			//res.send(peliculas);
+			res.render('pelicula', { peliculas: peliculas });
+  	});
+});
 
-	pelicula.find({}, function(err, peliculas) {
-	  if (err) throw err;
-	  console.log(peliculas);
+
+router.get('/formularioNuevaPelicula', function(req, res, next) {
+	res.render('nuevaPelicula');
+});
+
+router.get('/formularioAlquilarPelicula/:id', function(req, res, next) {
+	pelicula.find({_id : req.params.id },function(error,pelicula,count){
+		if(error) res.send('Error');
+		console.log('Se encontro la peli: ' + JSON.stringify(pelicula));
+		res.render('alquilarPelicula', { pelicula : pelicula[0] });
 	});
+});
 
-	res.render('pelicula', { title: 'Socios' });
-	//db.praAyD1.insert({'username' : 'test1','email' : 'test1@test.com','fullname' : 'Bob Smith','age' : 27,'location' : 'San Francisco','gender' : 'Male'})
+
+router.delete('/:id', function(req, res, next) {
+	pelicula.remove({_id: req.params.id}, function(error){
+		if(error){
+			res.send('Error al intentar eliminar la pelicula.');
+		}else{ 
+			res.send('Película eliminada exitosamente');
+		}
+	});
+	
 });
 
 
@@ -44,6 +65,31 @@ router.post('/create', function(req, res, next) {
 			throw err
 		};
 	    res.send('Nuevo pelicula agregada: ' + pelicula);
+	});
+});
+
+router.get('/alquilar', function(req, res, next) {
+	console.log('idPelicula: ' + req.query.idPelicula);
+	if(!req.query.idPelicula) redirect('/pelicula');
+	pelicula.findById( req.query.idPelicula , function(error,pelicula,count){
+		if(error) {
+			console.log('Error al alquilar pelicula: ' + error);
+			res.send('Error');
+		}else{
+			console.log('Se alquilará la peli: ' + JSON.stringify(pelicula));
+			pelicula.socioPortador = { 
+				socioId: req.query.idSocio,
+				fechaAlquiler: new Date()
+			};
+			pelicula.save(function(error,documento){
+				if(error) {
+					console.log('Error al alquilar pelicula: ' + error);
+					res.redirect('/pelicula?no_alquilada');
+				}else{
+					res.redirect('/pelicula?exito');
+				}
+			});
+		}	
 	});
 });
 

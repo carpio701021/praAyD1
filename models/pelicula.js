@@ -10,10 +10,10 @@ var pelicula = new Schema({
 	lenguajeDisponible: String,
 	generoCinematografico: String,
 	duracion: Number,
-	socioPortador: [{
+	socioPortador: {
 		socioId: mongoose.Schema.Types.ObjectId,
-		fechaDevolucion: Date
-	}] //validar este 
+		fechaAlquiler: Date
+	} //validar este 
 });
 
 module.exports = mongoose.model('pelicula', pelicula);

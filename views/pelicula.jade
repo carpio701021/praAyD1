@@ -1,5 +1,67 @@
 extends base
 
+block scripts
+	script.
+		function mostrarFormularioNuevaPelicula(){
+			var xmlobj = new XMLHttpRequest();											
+			xmlobj.onreadystatechange = function(){			
+				if(xmlobj.readyState==4){ //ya termino de cargar proceso 
+					if(xmlobj.status==200){ //se cargo bien similar a 404 error 200 = exito											
+						bootbox.alert(xmlobj.responseText);
+					}else{
+						bootbox.alert("Imposible cargar Formulario:\n" + xmlobj.responseText);
+						//caca.innerHTML=xmlobj.responseText;
+					}
+				}
+			};			
+			var path = '/pelicula/formularioNuevaPelicula' ;
+			xmlobj.open('GET', path ,true);
+			//xmlobj.open('GET', '/',true);
+			xmlobj.setRequestHeader('Content-type','application/x-www-form-urlencoded');
+			xmlobj.send();	
+		}
+		
+		function mostrarFormularioAlquilarPelicula(peliId){
+			var xmlobj = new XMLHttpRequest();											
+			xmlobj.onreadystatechange = function(){			
+				if(xmlobj.readyState==4){ //ya termino de cargar proceso 
+					if(xmlobj.status==200){ //se cargo bien similar a 404 error 200 = exito											
+						bootbox.alert(xmlobj.responseText);
+					}else{
+						bootbox.alert("Imposible cargar Formulario:\n" + xmlobj.responseText);
+						//caca.innerHTML=xmlobj.responseText;
+					}
+				}
+			};			
+			var path = '/pelicula/formularioAlquilarPelicula/' + peliId ;
+			xmlobj.open('GET', path ,true);
+			//xmlobj.open('GET', '/',true);
+			xmlobj.setRequestHeader('Content-type','application/x-www-form-urlencoded');
+			xmlobj.send();	
+		}
+
+		function mostrarBorrarPelicula(peliId){
+			bootbox.confirm("Desea borrar la pelicula: " + peliId , function(result) {
+				if(result) {
+					var xmlobj = new XMLHttpRequest();											
+					xmlobj.onreadystatechange = function(){			
+						if(xmlobj.readyState==4){ //ya termino de cargar proceso 
+							if(xmlobj.status==200){ //se cargo bien similar a 404 error 200 = exito	
+								bootbox.alert(xmlobj.responseText);
+							}else{
+								bootbox.alert("Error:\n" + xmlobj.responseText);
+							}
+						}
+					};			
+					var path = '/pelicula/' + peliId  ;
+					xmlobj.open('DELETE', path ,true);
+					//xmlobj.open('GET', '/',true);
+					xmlobj.setRequestHeader('Content-type','application/x-www-form-urlencoded');
+					xmlobj.send();	
+				}
+			});
+		}
+
 block body
 
 	br
@@ -9,32 +71,42 @@ block body
 	div.container
 		h1 Películas
 		br
-		h2 Agregar Pelicula
-		form(action='/pelicula/create', method='POST', accept-charset='utf-8')
-			label(for='titulo') Título de la película:
-			input(type='text',name='titulo')
-			br			
-			label(for='anio') Año: 
-			input(type='number',name='anio')
-			br			
-			label(for='director') Director: 
-			input(type='text',name='director')
-			br			
-			label(for='actores') Actores: 
-			input(type='text',name='actores')
-			br			
-			label(for='lenguaje') Lenguaje original: 
-			input(type='text',name='lenguaje')
-			br			
-			label(for='lenguajeDisponible') Lenguajes disponibles:
-			input(type='text',name='lenguajeDisponible')
-			br			
-			label(for='genero') Género:
-			input(type='text',name='genero')
-			br			
-			label(for='duracion') Duración: 
-			input(type='number',name='duracion')
-			br			
+		div.btn-group.btn-group-justified
+			div.btn-group
+				input.btn.btn-primary(type='button',value='Nueva Película',onClick='mostrarFormularioNuevaPelicula();')
+			div.btn-group
+				button.btn.btn-primary(data-toggle="collapse" data-target="#divPelis") Películas
+		div(id='divPelis', class='collapse')
+			ul.list-group
+				each peli in peliculas
+					li.list-group-item 
+						h3 Titulo: !{peli.titulo}
+						p Año: !{peli.año}
+						p Director: !{peli.director}
+						p Actores: !{peli.actores}
+						p Lenguaje de origen: !{peli.lenguajeOrigen}
+						p Lenguajes disponibles: !{peli.lenguajeDisponible}
+						p Genero cinematográfico: !{peli.generoCinematografico}
+						p Duracion: !{peli.duracion}
+						p Portador: 
+							if peli.socioPortador.socioId
+								| Alquilada a !{peli.socioPortador}							
+							else
+								| Disponible
 
-			input(type='submit', value='enviar') 
+						div.btn-group
+							input.btn.btn-default(
+								type='button',
+								value='Alquilar',
+								onClick='mostrarFormularioAlquilarPelicula("#{peli._id}");'
+							)
+							input.btn.btn-danger(
+								type='button',
+								value='Borrar',
+								onClick='mostrarBorrarPelicula("#{peli._id}");'
+							)
 
+
+
+block final
+	script(src='/javascripts/bootbox.min.js')

@@ -1,0 +1,28 @@
+h2 Nueva Película
+form(action='/pelicula/create', method='POST', accept-charset='utf-8')
+	label(for='titulo') Título de la película:
+	input(type='text',name='titulo')
+	br			
+	label(for='anio') Año: 
+	input(type='number',name='anio')
+	br			
+	label(for='director') Director: 
+	input(type='text',name='director')
+	br			
+	label(for='actores') Actores: 
+	input(type='text',name='actores')
+	br			
+	label(for='lenguaje') Lenguaje original: 
+	input(type='text',name='lenguaje')
+	br			
+	label(for='lenguajeDisponible') Lenguajes disponibles:
+	input(type='text',name='lenguajeDisponible')
+	br			
+	label(for='genero') Género:
+	input(type='text',name='genero')
+	br			
+	label(for='duracion') Duración: 
+	input(type='number',name='duracion')
+	br			
+
+	input.btn(type='submit', value='enviar') 
