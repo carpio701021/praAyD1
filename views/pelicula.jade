@@ -62,6 +62,27 @@ block scripts
 			});
 		}
 
+		function mostrarRemoverAlquilerPelicula(peliId){
+			bootbox.confirm("La pelicula " + peliId  + " ha sido devuleta" , function(result) {
+				if(result) {
+					var xmlobj = new XMLHttpRequest();											
+					xmlobj.onreadystatechange = function(){			
+						if(xmlobj.readyState==4){ //ya termino de cargar proceso 
+							if(xmlobj.status==200){ //se cargo bien similar a 404 error 200 = exito	
+								bootbox.alert(xmlobj.responseText);
+							}else{
+								bootbox.alert("Error:\n" + xmlobj.responseText);
+							}
+						}
+					};			
+					var path = '/pelicula/' + peliId + '/quitarAlquiler' ;
+					xmlobj.open('GET', path ,true);
+					xmlobj.setRequestHeader('Content-type','application/x-www-form-urlencoded');
+					xmlobj.send();	
+				}
+			});
+		}
+
 block body
 
 	br
@@ -95,11 +116,18 @@ block body
 								| Disponible
 
 						div.btn-group
-							input.btn.btn-default(
-								type='button',
-								value='Alquilar',
-								onClick='mostrarFormularioAlquilarPelicula("#{peli._id}");'
-							)
+							if peli.socioPortador.socioId
+								input.btn.btn-default(
+									type='button',
+									value='Remover Alquiler',
+									onClick='mostrarRemoverAlquilerPelicula("#{peli._id}");'
+								)
+							else
+								input.btn.btn-default(
+									type='button',
+									value='Alquilar',
+									onClick='mostrarFormularioAlquilarPelicula("#{peli._id}");'
+								)
 							input.btn.btn-danger(
 								type='button',
 								value='Borrar',

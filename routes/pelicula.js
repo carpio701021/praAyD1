@@ -93,6 +93,29 @@ router.get('/alquilar', function(req, res, next) {
 	});
 });
 
+router.get('/:id/quitarAlquiler', function(req, res, next) {
+	console.log('idPelicula: ' + req.params.id);
+	if(!req.params.id) redirect('/pelicula');
+	pelicula.findById( req.params.id , function(error,pelicula,count){
+		if(error) {
+			console.log('Error al alquilar pelicula: ' + error);
+			res.send('Error');
+		}else{
+			console.log('Se alquilará la peli: ' + JSON.stringify(pelicula));
+			pelicula.socioPortador = undefined;
+			pelicula.save(function(error,documento){
+				if(error) {
+					console.log('Error al alquilar pelicula: ' + error);
+					res.send('/pelicula?sigue_alquilada');
+				}else{
+					res.send('/pelicula?exito_quitar_alquiler');
+				}
+			});
+		}	
+	});
+});
+
+
 router.get('/getAll', function(req, res, next) {
 	pelicula.find(function( err, peliculas, count ){
 		res.send(peliculas);
