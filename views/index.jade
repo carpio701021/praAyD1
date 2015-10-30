@@ -10,3 +10,15 @@ block body
 		h1 Películas
 		div
 			p peli 1
+
+		h2 Socios
+		form(action='/users/create', method='POST', accept-charset='utf-8')
+			label(for='nombre') Nombre:
+			input(type='text',name='nombre')
+			br			
+			label(for='apellido') Apellido:
+			input(type='text',name='apellido')
+			br
+			label(for='nacimiento') Fecha de Nacimiento:
+			input(type='date',name='nacimiento')
+			br
