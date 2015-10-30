@@ -14,10 +14,7 @@ var newUser = socio({
 });
 
 // save the user
-newUser.save(function(err) {
-  if (err) throw err;
-  console.log('User created!');
-});
+
 
 /* GET home page. */
 router.get('/', function(req, res, next) {
@@ -37,16 +34,19 @@ router.get('/', function(req, res, next) {
 
 router.post('/create', function(req, res, next) {
 	new socio({
-		nombre: req.body.nombre,
-	    apellido: req.body.apellido,
-	    nacimiento: req.body.nacimiento
+		nombre : req.body.nombre,
+		telefono: req.body.telefono,
+		correo: req.body.correo,
+		nacimiento : req.body.nacimiento,
+		domicilio: req.body.domicilio,
+		fechaRegistro: Date
 	}).save(function(err, socio, count){
-	    res.send(socio);
+		if(err) throw err;
+	    res.send('Nuevo socio agregado: ' + socio);
 	});
 });
 
-router.get('/getAll', function(req, res, next) 
-{
+router.get('/getAll', function(req, res, next) {
 	socio.find(function( err, socios, count ){
 		res.send(socios);
   	});
