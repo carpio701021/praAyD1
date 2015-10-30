@@ -7,8 +7,8 @@ var socio = new Schema({
 	correo: String,
 	nacimiento : Date,
 	domicilio: String,
-	fechaRegistro: Date,
-	peliculas: [ Number ]
+	fechaRegistro: Date
+	//peliculas: [ Number ]
 });
 
 module.exports = mongoose.model('socio', socio);

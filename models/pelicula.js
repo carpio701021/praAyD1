@@ -5,12 +5,15 @@ var pelicula = new Schema({
 	titulo: String,
 	año: Number,
 	director: String,
-	actores: [String],
+	actores: String,
 	lenguajeOrigen: String,
-	lenguajeDisponible: [String],
+	lenguajeDisponible: String,
 	generoCinematografico: String,
-	duracion: Number/*,
-	socios: []*/ //validar este
+	duracion: Number,
+	socioPortador: [{
+		socioId: mongoose.Schema.Types.ObjectId,
+		fechaDevolucion: Date
+	}] //validar este 
 });
 
 module.exports = mongoose.model('pelicula', pelicula);

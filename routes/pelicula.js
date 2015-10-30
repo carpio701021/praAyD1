@@ -2,55 +2,54 @@ var express = require('express');
 var router = express.Router();
 
 var mongoose = require('mongoose');//cargamos mongoose
-var socio = require('../models/socio');
+var pelicula = require('../models/pelicula');
 
 
 // create a new user
-var newUser = socio({
+/*var newUser = pelicula({
   nombre: 'Peter Quill',
   apellido: 'starlord55',
   nacimiento: Date()
 });
 
-// save the user
+// save the user */
 
 
 /* GET home page. */
 router.get('/', function(req, res, next) {
 
-	socio.find({}, function(err, socios) {
+	pelicula.find({}, function(err, peliculas) {
 	  if (err) throw err;
-
-	  // object of all the users
-	  console.log(socios);
+	  console.log(peliculas);
 	});
 
-	res.render('index', { title: 'Socios' });
+	res.render('pelicula', { title: 'Socios' });
 	//db.praAyD1.insert({'username' : 'test1','email' : 'test1@test.com','fullname' : 'Bob Smith','age' : 27,'location' : 'San Francisco','gender' : 'Male'})
-
 });
 
 
 router.post('/create', function(req, res, next) {
-	new socio({
-		nombre : req.body.nombre,
-		telefono: req.body.telefono,
-		correo: req.body.correo,
-		nacimiento : req.body.nacimiento,
-		domicilio: req.body.domicilio,
-		fechaRegistro: new Date()
-	}).save(function(err, socio, count){
+	new pelicula({
+		titulo: req.body.titulo,
+		año: req.body.anio,
+		director: req.body.director,
+		actores: req.body.actores,
+		lenguajeOrigen: req.body.lenguaje,
+		lenguajeDisponible: req.body.lenguajeDisponible,
+		generoCinematografico: req.body.genero,
+		duracion: req.body.duracion,
+	}).save(function(err, pelicula, count){
 		if(err) {
 			console.log('Error BD: \n' + err)
 			throw err
 		};
-	    res.send('Nuevo socio agregado: ' + socio);
+	    res.send('Nuevo pelicula agregada: ' + pelicula);
 	});
 });
 
 router.get('/getAll', function(req, res, next) {
-	socio.find(function( err, socios, count ){
-		res.send(socios);
+	pelicula.find(function( err, peliculas, count ){
+		res.send(peliculas);
   	});
 });
 

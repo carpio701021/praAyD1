@@ -7,9 +7,7 @@ var cookieParser = require('cookie-parser');
 var bodyParser = require('body-parser');
 var mongoose   = require('mongoose');
 db = mongoose.connect('mongodb://127.0.0.1:27017/praAyD1', function (error) {
-    if (error) {
-        console.log('Error de bd: ' + error); 
-    }
+    if (error) console.log('Error de bd: ' + error); 
 }); // connect to our database
 
 
@@ -20,6 +18,7 @@ var socio = ('./models/socio');
 //routes
 var routes = require('./routes/index');
 var users = require('./routes/users');
+var pelicula = require('./routes/pelicula');
 
 var app = express();
 
@@ -40,6 +39,7 @@ app.use(express.static(path.join(__dirname, 'public')));
 
 app.use('/', routes);
 app.use('/users', users);
+app.use('/pelicula', pelicula);
 
 
 
