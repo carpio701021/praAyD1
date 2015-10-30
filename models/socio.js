@@ -8,7 +8,7 @@ var socio = new Schema({
 	nacimiento : Date,
 	domicilio: String,
 	fechaRegistro: Date,
-	peliculas: [ { idPelicula : ObjectId } ]
+	peliculas: [ Number ]
 });
 
 module.exports = mongoose.model('socio', socio);
