@@ -1,9 +1,8 @@
 h2 Alquilar Película
-form(action='/pelicula/alquilar', method='GET', accept-charset='utf-8')
+form(action='/pelicula/alquilar', method='POST', accept-charset='utf-8')
 	h4 Titulo: #{pelicula.titulo}
 	input(name='idPelicula',type='text', style='display:none' value='#{pelicula._id}')
 	label(for='idSocio') Id de socio: 
 	input(type='text',name='idSocio')
 	br			
-
-	input.btn(type='submit', value='enviar') 
+	input.btn(type='submit', value='Alquilar') 

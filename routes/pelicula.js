@@ -5,16 +5,6 @@ var mongoose = require('mongoose');//cargamos mongoose
 var pelicula = require('../models/pelicula');
 
 
-// create a new user
-/*var newUser = pelicula({
-  nombre: 'Peter Quill',
-  apellido: 'starlord55',
-  nacimiento: Date()
-});
-
-// save the user */
-
-
 /* GET home page. */
 router.get('/', function(req, res, next) {
 	pelicula.find(function( err, peliculas, count ){
@@ -64,33 +54,40 @@ router.post('/create', function(req, res, next) {
 			console.log('Error BD: \n' + err)
 			throw err
 		};
-	    res.send('Nuevo pelicula agregada: ' + pelicula);
+	    //res.send('Nuevo pelicula agregada: ' + pelicula);
+	    res.redirect('/pelicula');
 	});
 });
 
-router.get('/alquilar', function(req, res, next) {
-	console.log('idPelicula: ' + req.query.idPelicula);
-	if(!req.query.idPelicula) redirect('/pelicula');
-	pelicula.findById( req.query.idPelicula , function(error,pelicula,count){
-		if(error) {
-			console.log('Error al alquilar pelicula: ' + error);
-			res.send('Error');
-		}else{
-			console.log('Se alquilará la peli: ' + JSON.stringify(pelicula));
-			pelicula.socioPortador = { 
-				socioId: req.query.idSocio,
-				fechaAlquiler: new Date()
-			};
-			pelicula.save(function(error,documento){
+router.post('/alquilar', function(req, res, next) {
+	if(!req.body.idPelicula) redirect('/pelicula');
+	pelicula.count( {  "socioPortador.socioId": req.body.idSocio } , function(err,count){
+		if(count>=3) res.redirect('/pelicula?limite_excedido_para_dicho_usuario');
+		else{
+			pelicula.findById( req.body.idPelicula , function(error,pelicula,count){
 				if(error) {
 					console.log('Error al alquilar pelicula: ' + error);
-					res.redirect('/pelicula?no_alquilada');
+					res.send('Error');
 				}else{
-					res.redirect('/pelicula?exito');
-				}
+					console.log('Se alquilará la peli: ' + JSON.stringify(pelicula));
+					pelicula.socioPortador = { 
+						socioId: req.body.idSocio,
+						fechaAlquiler: new Date()
+					};
+					pelicula.save(function(error,documento){
+						if(error) {
+							console.log('Error al alquilar pelicula: ' + error);
+							res.redirect('/pelicula?no_alquilada');
+						}else{
+							res.redirect('/pelicula?exito');
+						}
+					});
+				}	
 			});
-		}	
-	});
+		}
+});
+
+	
 });
 
 router.get('/:id/quitarAlquiler', function(req, res, next) {
@@ -120,6 +117,15 @@ router.get('/getAll', function(req, res, next) {
 	pelicula.find(function( err, peliculas, count ){
 		res.send(peliculas);
   	});
+});
+
+
+router.get('/countPrestadas/:id', function(req, res, next) {
+	//if(!req.query.idPelicula) redirect('/pelicula');
+	pelicula.count( { "socioPortador.socioId": req.params.id } , function(err,count){
+		console.log('Del socio ' + req.params.id + ' se contaron ' + count + ' pelis prestadas');
+		res.send('Del socio ' + req.params.id + ' se contaron ' + count + ' pelis prestadas');
+	});
 });
 
 module.exports = router;

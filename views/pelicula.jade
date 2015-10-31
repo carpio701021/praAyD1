@@ -70,6 +70,7 @@ block scripts
 						if(xmlobj.readyState==4){ //ya termino de cargar proceso 
 							if(xmlobj.status==200){ //se cargo bien similar a 404 error 200 = exito	
 								bootbox.alert(xmlobj.responseText);
+								window.location.replace(xmlobj.responseText);
 							}else{
 								bootbox.alert("Error:\n" + xmlobj.responseText);
 							}
